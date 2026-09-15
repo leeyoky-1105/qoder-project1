@@ -69,7 +69,7 @@
 {% block scripts %}
 <script>
 function importFunds() {
-    fetch('/api/v1/accounts/import-funds', {method: 'POST'})
+    fetch('/api/v1/funds/import', {method: 'POST'})
         .then(r => r.json())
         .then(data => {
             const el = document.getElementById('importResult');

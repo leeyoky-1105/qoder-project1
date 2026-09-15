@@ -15,7 +15,7 @@
                 </span>
             </div>
             <div class="card-body">
-                {% if report.items %}
+                {% if report['items'] %}
                 <table class="table table-bordered table-striped">
                     <thead class="table-light">
                         <tr>
@@ -37,7 +37,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for item in report.items %}
+                        {% for item in report['items'] %}
                         <tr>
                             <td>{{ item.fund_code }}</td>
                             <td>{{ item.fund_name }}</td>

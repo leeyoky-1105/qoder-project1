@@ -26,7 +26,7 @@ def subscribe_page():
 @trade_bp.route("/subscribe", methods=["POST"])
 def subscribe():
     """申购下单接口."""
-    data = request.get_json() or request.form.to_dict()
+    data = request.get_json(silent=True) or request.form.to_dict()
 
     result = TradeService.subscribe(
         account_no=data.get("account_no", ""),
@@ -72,7 +72,7 @@ def redeem_page():
 @trade_bp.route("/redeem", methods=["POST"])
 def redeem():
     """赎回下单接口."""
-    data = request.get_json() or request.form.to_dict()
+    data = request.get_json(silent=True) or request.form.to_dict()
 
     result = TradeService.redeem(
         account_no=data.get("account_no", ""),

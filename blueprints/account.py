@@ -26,7 +26,7 @@ def register_page():
 @account_bp.route("/register", methods=["POST"])
 def register():
     """开户注册接口."""
-    data = request.get_json() or request.form.to_dict()
+    data = request.get_json(silent=True) or request.form.to_dict()
 
     result = AccountService.register(
         name=data.get("name", ""),
