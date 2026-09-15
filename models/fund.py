@@ -7,7 +7,7 @@ from models import db
 class FundProduct(db.Model):
     """基金产品信息.
 
-    存储基金产品核心要素，包括净值、费率等.
+    存储基金产品核心要素，包括名称、代码、净值等.
     """
 
     __tablename__ = "fund_product"
@@ -19,23 +19,8 @@ class FundProduct(db.Model):
     fund_name = db.Column(
         db.String(64), nullable=False
     )
-    fund_type = db.Column(
-        db.String(16), nullable=False
-    )
     nav = db.Column(db.Float, nullable=False)
-    nav_date = db.Column(db.Date, nullable=False)
-    min_subscribe = db.Column(
-        db.Float, nullable=False, default=1000.0
-    )
-    min_redeem = db.Column(
-        db.Float, nullable=False, default=100.0
-    )
-    subscribe_fee_rate = db.Column(
-        db.Float, nullable=False, default=0.0
-    )
-    redeem_fee_rate = db.Column(
-        db.Float, nullable=False, default=0.0
-    )
+    nav_date = db.Column(db.String(8), nullable=False)
     status = db.Column(
         db.String(8), nullable=False, default="ACTIVE"
     )
@@ -52,16 +37,7 @@ class FundProduct(db.Model):
         return {
             "fund_code": self.fund_code,
             "fund_name": self.fund_name,
-            "fund_type": self.fund_type,
             "nav": self.nav,
-            "nav_date": (
-                self.nav_date.strftime("%Y-%m-%d")
-                if self.nav_date
-                else None
-            ),
-            "min_subscribe": self.min_subscribe,
-            "min_redeem": self.min_redeem,
-            "subscribe_fee_rate": self.subscribe_fee_rate,
-            "redeem_fee_rate": self.redeem_fee_rate,
+            "nav_date": self.nav_date,
             "status": self.status,
         }

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}基金列表 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">基金产品列表</h4>
+                <span class="badge bg-secondary">{{ funds|length }} 只基金</span>
+            </div>
+            <div class="card-body">
+                {% if funds %}
+                <table class="table table-striped table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>基金代码</th>
+                            <th>基金名称</th>
+                            <th>单位净值</th>
+                            <th>净值日期</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for fund in funds %}
+                        <tr>
+                            <td><strong>{{ fund.fund_code }}</strong></td>
+                            <td>{{ fund.fund_name }}</td>
+                            <td>{{ fund.nav }}</td>
+                            <td>{{ fund.nav_date }}</td>
+                            <td>
+                                {% if fund.status == "ACTIVE" %}
+                                <span class="badge bg-success">正常</span>
+                                {% else %}
+                                <span class="badge bg-secondary">{{ fund.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="text-center py-4">
+                    <p class="text-muted">暂无基金产品数据。</p>
+                    <p class="text-muted">请先在 <a href="/">首页</a> 点击"导入产品"导入 Excel 配置文件。</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -12,6 +12,12 @@ from services.share_service import ShareService
 
 logger = logging.getLogger(__name__)
 
+# 默认交易参数
+DEFAULT_MIN_SUBSCRIBE = 1000.0
+DEFAULT_MIN_REDEEM = 100.0
+DEFAULT_SUBSCRIBE_FEE_RATE = 0.0
+DEFAULT_REDEEM_FEE_RATE = 0.0
+
 
 class TradeService:
     """交易管理服务.
@@ -78,17 +84,19 @@ class TradeService:
                 "data": None,
             }
 
-        if amount < fund.min_subscribe:
+        if amount < DEFAULT_MIN_SUBSCRIBE:
             return {
                 "code": 400,
                 "message": (
                     f"申购金额不得低于 "
-                    f"{fund.min_subscribe:.2f} 元"
+                    f"{DEFAULT_MIN_SUBSCRIBE:.2f} 元"
                 ),
                 "data": None,
             }
 
-        fee = round(amount * fund.subscribe_fee_rate, 2)
+        fee = round(
+            amount * DEFAULT_SUBSCRIBE_FEE_RATE, 2
+        )
         net_amount = amount - fee
         shares = round(net_amount / fund.nav, 2)
 
@@ -171,12 +179,12 @@ class TradeService:
                 "data": None,
             }
 
-        if shares < fund.min_redeem:
+        if shares < DEFAULT_MIN_REDEEM:
             return {
                 "code": 400,
                 "message": (
                     f"赎回份额不得低于 "
-                    f"{fund.min_redeem:.2f} 份"
+                    f"{DEFAULT_MIN_REDEEM:.2f} 份"
                 ),
                 "data": None,
             }
@@ -192,7 +200,9 @@ class TradeService:
             }
 
         amount = round(shares * fund.nav, 2)
-        fee = round(amount * fund.redeem_fee_rate, 2)
+        fee = round(
+            amount * DEFAULT_REDEEM_FEE_RATE, 2
+        )
 
         trade = TradeOrder(
             trade_no=TradeService._generate_trade_no(),

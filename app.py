@@ -43,6 +43,15 @@ def create_app() -> Flask:
             "data": [f.to_dict() for f in funds],
         })
 
+    @app.route("/api/v1/funds/list", methods=["GET"])
+    def list_funds_page():
+        """基金产品列表页面."""
+        funds = FundProduct.query.all()
+        return render_template(
+            "fund/list.html",
+            funds=[f.to_dict() for f in funds],
+        )
+
     @app.route("/api/v1/funds/import", methods=["POST"])
     def import_funds():
         """导入基金产品配置."""

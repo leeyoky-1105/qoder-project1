@@ -21,7 +21,6 @@
                         <tr>
                             <th>基金代码</th>
                             <th>基金名称</th>
-                            <th>类型</th>
                             <th>净值</th>
                             <th>申购笔数</th>
                             <th>申购金额</th>
@@ -41,7 +40,6 @@
                         <tr>
                             <td>{{ item.fund_code }}</td>
                             <td>{{ item.fund_name }}</td>
-                            <td>{{ "债券型" if item.fund_type == "BOND" else "股票型" }}</td>
                             <td>{{ item.nav }}</td>
                             <td>{{ item.subscribe_count }}</td>
                             <td>{{ "%.2f"|format(item.subscribe_amount) }}</td>

@@ -16,5 +16,5 @@ class Config:
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     FUNDS_CONFIG_PATH = os.path.join(
-        BASE_DIR, "data", "funds.json"
+        BASE_DIR, "data", "funds.xlsx"
     )

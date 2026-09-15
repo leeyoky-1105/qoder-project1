@@ -72,7 +72,6 @@ class ReconciliationService:
             report_items.append({
                 "fund_code": fund.fund_code,
                 "fund_name": fund.fund_name,
-                "fund_type": fund.fund_type,
                 "nav": fund.nav,
                 "subscribe_count": len(subscribe_trades),
                 "subscribe_amount": round(
