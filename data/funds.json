@@ -1,0 +1,28 @@
+{
+    "funds": [
+        {
+            "fund_code": "000001",
+            "fund_name": "稳健债券基金A",
+            "fund_type": "BOND",
+            "nav": 1.0523,
+            "nav_date": "2026-09-15",
+            "min_subscribe": 1000.00,
+            "min_redeem": 100.00,
+            "subscribe_fee_rate": 0.006,
+            "redeem_fee_rate": 0.001,
+            "status": "ACTIVE"
+        },
+        {
+            "fund_code": "000002",
+            "fund_name": "成长股票基金A",
+            "fund_type": "EQUITY",
+            "nav": 2.3156,
+            "nav_date": "2026-09-15",
+            "min_subscribe": 1000.00,
+            "min_redeem": 100.00,
+            "subscribe_fee_rate": 0.012,
+            "redeem_fee_rate": 0.005,
+            "status": "ACTIVE"
+        }
+    ]
+}

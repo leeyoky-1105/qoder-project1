@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}份额查询 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">份额查询</h4>
+            </div>
+            <div class="card-body">
+                <form method="GET" action="/api/v1/shares/query" class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label">交易账号</label>
+                        <input type="text" class="form-control" name="account_no" value="{{ account_no }}" placeholder="请输入交易账号">
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-primary w-100">查询</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        {% if shares is not none %}
+        <div class="card mb-4">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">持有份额</h5>
+            </div>
+            <div class="card-body">
+                {% if shares %}
+                <table class="table table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>基金代码</th>
+                            <th>总份额</th>
+                            <th>可用份额</th>
+                            <th>冻结份额</th>
+                            <th>更新时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for s in shares %}
+                        <tr>
+                            <td>{{ s.fund_code }}</td>
+                            <td>{{ "%.2f"|format(s.total_shares) }}</td>
+                            <td>{{ "%.2f"|format(s.available_shares) }}</td>
+                            <td>{{ "%.2f"|format(s.frozen_shares) }}</td>
+                            <td>{{ s.updated_at }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted text-center mb-0">该账户暂无持有份额。</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if trades is not none %}
+        <div class="card">
+            <div class="card-header bg-white">
+                <h5 class="mb-0">交易记录</h5>
+            </div>
+            <div class="card-body">
+                {% if trades %}
+                <table class="table table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>交易流水号</th>
+                            <th>基金代码</th>
+                            <th>类型</th>
+                            <th>金额</th>
+                            <th>净值</th>
+                            <th>手续费</th>
+                            <th>份额</th>
+                            <th>状态</th>
+                            <th>交易时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for t in trades %}
+                        <tr>
+                            <td>{{ t.trade_no }}</td>
+                            <td>{{ t.fund_code }}</td>
+                            <td><span class="badge {% if t.trade_type == 'SUBSCRIBE' %}bg-success{% else %}bg-warning{% endif %}">{{ "申购" if t.trade_type == "SUBSCRIBE" else "赎回" }}</span></td>
+                            <td>{{ "%.2f"|format(t.amount) }}</td>
+                            <td>{{ t.nav }}</td>
+                            <td>{{ "%.2f"|format(t.fee) }}</td>
+                            <td>{{ "%.2f"|format(t.shares) }}</td>
+                            <td><span class="badge bg-info">{{ t.status }}</span></td>
+                            <td>{{ t.trade_time }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted text-center mb-0">该账户暂无交易记录。</p>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

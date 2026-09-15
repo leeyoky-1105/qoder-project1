@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}开户注册 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">投资者开户注册</h4>
+            </div>
+            <div class="card-body">
+                {% if success is defined and success %}
+                <div class="alert alert-success">
+                    <h5>开户成功！</h5>
+                    <p>您的交易账号为：<strong>{{ account.account_no }}</strong></p>
+                    <p>请妥善保存此账号，后续交易需使用。</p>
+                    <a href="/" class="btn btn-primary">返回首页</a>
+                </div>
+                {% else %}
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                <p class="text-muted">请填写以下信息完成开户，四要素（姓名、证件类型、证件号码、银行卡号）及手机号均为必填。</p>
+
+                <form method="POST" action="/api/v1/accounts/register">
+                    <div class="mb-3">
+                        <label class="form-label">姓名 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="name" required placeholder="请输入真实姓名">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">证件类型 <span class="text-danger">*</span></label>
+                        <select class="form-select" name="id_type" required>
+                            <option value="">请选择</option>
+                            <option value="身份证">身份证</option>
+                            <option value="护照">护照</option>
+                            <option value="军官证">军官证</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">证件号码 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="id_no" required placeholder="请输入证件号码">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">银行卡号 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="bank_card_no" required placeholder="请输入银行卡号">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">手机号 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="phone" required placeholder="请输入11位手机号" maxlength="11">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">提交开户</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

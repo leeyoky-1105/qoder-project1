@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}基金赎回 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">基金赎回</h4>
+            </div>
+            <div class="card-body">
+                {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+                {% endif %}
+
+                {% if not accounts %}
+                <div class="alert alert-warning">
+                    暂无可用账户，请先 <a href="/api/v1/accounts/register">开户注册</a>。
+                </div>
+                {% elif not funds %}
+                <div class="alert alert-warning">
+                    暂无基金产品，请先在 <a href="/">首页</a> 导入产品配置。
+                </div>
+                {% else %}
+                <form method="POST" action="/api/v1/trades/redeem">
+                    <div class="mb-3">
+                        <label class="form-label">交易账号 <span class="text-danger">*</span></label>
+                        <select class="form-select" name="account_no" required>
+                            <option value="">请选择账户</option>
+                            {% for acc in accounts %}
+                            <option value="{{ acc.account_no }}">{{ acc.account_no }} - {{ acc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">基金产品 <span class="text-danger">*</span></label>
+                        <select class="form-select" name="fund_code" id="fundSelect" required onchange="updateFundInfo()">
+                            <option value="">请选择基金</option>
+                            {% for fund in funds %}
+                            <option value="{{ fund.fund_code }}" data-nav="{{ fund.nav }}" data-fee="{{ fund.redeem_fee_rate }}" data-min="{{ fund.min_redeem }}">{{ fund.fund_code }} - {{ fund.fund_name }} (净值: {{ fund.nav }})</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div id="fundInfo" class="alert alert-info d-none">
+                        <small>
+                            单位净值：<strong id="infoNav">-</strong> |
+                            赎回费率：<strong id="infoFee">-</strong> |
+                            最低赎回份额：<strong id="infoMin">-</strong> 份
+                        </small>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">赎回份额（份）<span class="text-danger">*</span></label>
+                        <input type="number" class="form-control" name="shares" id="sharesInput" step="0.01" min="0" required placeholder="请输入赎回份额" oninput="calcRedeem()">
+                    </div>
+                    <div id="calcResult" class="alert alert-secondary d-none">
+                        <small>
+                            赎回金额：<strong id="calcAmount">-</strong> 元 |
+                            赎回手续费：<strong id="calcFee">-</strong> 元 |
+                            到账金额：<strong id="calcNet">-</strong> 元
+                        </small>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">确认赎回</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function updateFundInfo() {
+    const sel = document.getElementById('fundSelect');
+    const opt = sel.options[sel.selectedIndex];
+    const info = document.getElementById('fundInfo');
+    if (opt.value) {
+        document.getElementById('infoNav').textContent = opt.dataset.nav;
+        document.getElementById('infoFee').textContent = (opt.dataset.fee * 100).toFixed(2) + '%';
+        document.getElementById('infoMin').textContent = opt.dataset.min;
+        info.classList.remove('d-none');
+        calcRedeem();
+    } else {
+        info.classList.add('d-none');
+    }
+}
+function calcRedeem() {
+    const sel = document.getElementById('fundSelect');
+    const opt = sel.options[sel.selectedIndex];
+    const shares = parseFloat(document.getElementById('sharesInput').value) || 0;
+    const result = document.getElementById('calcResult');
+    if (opt.value && shares > 0) {
+        const nav = parseFloat(opt.dataset.nav);
+        const amount = shares * nav;
+        const fee = amount * parseFloat(opt.dataset.fee);
+        const net = amount - fee;
+        document.getElementById('calcAmount').textContent = amount.toFixed(2);
+        document.getElementById('calcFee').textContent = fee.toFixed(2);
+        document.getElementById('calcNet').textContent = net.toFixed(2);
+        result.classList.remove('d-none');
+    } else {
+        result.classList.add('d-none');
+    }
+}
+</script>
+{% endblock %}

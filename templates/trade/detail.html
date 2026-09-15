@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}交易结果 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-white">
+                <h4 class="mb-0">{{ trade_type }}交易结果</h4>
+            </div>
+            <div class="card-body">
+                {% if success %}
+                <div class="alert alert-success">
+                    <h5>{{ trade_type }}交易已确认！</h5>
+                </div>
+                <table class="table table-bordered">
+                    <tr><th class="bg-light" style="width:30%">交易流水号</th><td>{{ trade.trade_no }}</td></tr>
+                    <tr><th class="bg-light">交易账号</th><td>{{ trade.account_no }}</td></tr>
+                    <tr><th class="bg-light">基金代码</th><td>{{ trade.fund_code }}</td></tr>
+                    <tr><th class="bg-light">交易类型</th><td>{{ trade_type }}</td></tr>
+                    <tr><th class="bg-light">交易金额</th><td>{{ "%.2f"|format(trade.amount) }} 元</td></tr>
+                    <tr><th class="bg-light">成交净值</th><td>{{ trade.nav }}</td></tr>
+                    <tr><th class="bg-light">手续费</th><td>{{ "%.2f"|format(trade.fee) }} 元</td></tr>
+                    <tr><th class="bg-light">确认份额</th><td>{{ "%.2f"|format(trade.shares) }} 份</td></tr>
+                    <tr><th class="bg-light">交易时间</th><td>{{ trade.trade_time }}</td></tr>
+                    <tr><th class="bg-light">确认时间</th><td>{{ trade.confirm_time }}</td></tr>
+                    <tr><th class="bg-light">交易状态</th><td><span class="badge bg-success">{{ trade.status }}</span></td></tr>
+                </table>
+                <div class="d-flex gap-2">
+                    <a href="/api/v1/trades/subscribe" class="btn btn-primary">继续申购</a>
+                    <a href="/api/v1/trades/redeem" class="btn btn-outline-primary">继续赎回</a>
+                    <a href="/" class="btn btn-outline-secondary">返回首页</a>
+                </div>
+                {% else %}
+                <div class="alert alert-danger">交易失败，请检查输入参数。</div>
+                <a href="/" class="btn btn-primary">返回首页</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

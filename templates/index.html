@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}首页 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="px-4 py-3 bg-white rounded-3 mb-4">
+    <h2 class="fw-bold">基金TA模拟登记系统</h2>
+    <p class="text-muted">模拟基金TA注册登记系统的核心业务流程，包括投资者开户、基金申购/赎回、份额登记与对账。</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">开户注册</h5>
+                <p class="card-text text-muted">投资者提交四要素（姓名、证件类型、证件号、银行卡号）及手机号完成开户。</p>
+                <a href="/api/v1/accounts/register" class="btn btn-primary">进入开户</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">基金申购</h5>
+                <p class="card-text text-muted">选择基金产品，输入申购金额，系统自动计算手续费和确认份额。</p>
+                <a href="/api/v1/trades/subscribe" class="btn btn-primary">进入申购</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">基金赎回</h5>
+                <p class="card-text text-muted">选择持有基金，输入赎回份额，系统自动计算赎回金额和手续费。</p>
+                <a href="/api/v1/trades/redeem" class="btn btn-primary">进入赎回</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">份额查询</h5>
+                <p class="card-text text-muted">输入交易账号，查询持有各基金产品的份额明细及交易记录。</p>
+                <a href="/api/v1/shares/query" class="btn btn-primary">查询份额</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">对账报告</h5>
+                <p class="card-text text-muted">汇总各基金产品的申购、赎回交易数据，核对份额总量是否一致。</p>
+                <a href="/api/v1/reconciliation/report" class="btn btn-primary">查看报告</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">产品管理</h5>
+                <p class="card-text text-muted">从配置文件导入基金产品信息，查看当前已导入的产品列表。</p>
+                <button class="btn btn-outline-primary" onclick="importFunds()">导入产品</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="importResult" class="mt-3"></div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function importFunds() {
+    fetch('/api/v1/accounts/import-funds', {method: 'POST'})
+        .then(r => r.json())
+        .then(data => {
+            const el = document.getElementById('importResult');
+            if (data.code === 0) {
+                const d = data.data;
+                el.innerHTML = `<div class="alert alert-success">产品导入完成：成功 ${d.success_count} 只，失败 ${d.fail_count} 只</div>`;
+            } else {
+                el.innerHTML = `<div class="alert alert-danger">${data.message}</div>`;
+            }
+        })
+        .catch(err => {
+            document.getElementById('importResult').innerHTML =
+                `<div class="alert alert-danger">导入失败: ${err}</div>`;
+        });
+}
+</script>
+{% endblock %}

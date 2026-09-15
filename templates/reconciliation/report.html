@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %}对账报告 - 基金TA注册系统{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-12">
+        <div class="card mb-4">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h4 class="mb-0">对账报告</h4>
+                <span>
+                    {% if report.all_match %}
+                    <span class="badge bg-success fs-6">份额核对：全部一致</span>
+                    {% else %}
+                    <span class="badge bg-danger fs-6">份额核对：存在差异</span>
+                    {% endif %}
+                </span>
+            </div>
+            <div class="card-body">
+                {% if report.items %}
+                <table class="table table-bordered table-striped">
+                    <thead class="table-light">
+                        <tr>
+                            <th>基金代码</th>
+                            <th>基金名称</th>
+                            <th>类型</th>
+                            <th>净值</th>
+                            <th>申购笔数</th>
+                            <th>申购金额</th>
+                            <th>申购份额</th>
+                            <th>赎回笔数</th>
+                            <th>赎回金额</th>
+                            <th>赎回份额</th>
+                            <th>手续费合计</th>
+                            <th>持有总份额</th>
+                            <th>应计总份额</th>
+                            <th>核对结果</th>
+                            <th>持有人数</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in report.items %}
+                        <tr>
+                            <td>{{ item.fund_code }}</td>
+                            <td>{{ item.fund_name }}</td>
+                            <td>{{ "债券型" if item.fund_type == "BOND" else "股票型" }}</td>
+                            <td>{{ item.nav }}</td>
+                            <td>{{ item.subscribe_count }}</td>
+                            <td>{{ "%.2f"|format(item.subscribe_amount) }}</td>
+                            <td>{{ "%.2f"|format(item.subscribe_shares) }}</td>
+                            <td>{{ item.redeem_count }}</td>
+                            <td>{{ "%.2f"|format(item.redeem_amount) }}</td>
+                            <td>{{ "%.2f"|format(item.redeem_shares) }}</td>
+                            <td>{{ "%.2f"|format(item.total_fee) }}</td>
+                            <td>{{ "%.2f"|format(item.total_held_shares) }}</td>
+                            <td>{{ "%.2f"|format(item.expected_shares) }}</td>
+                            <td>
+                                {% if item.shares_match %}
+                                <span class="badge bg-success">一致</span>
+                                {% else %}
+                                <span class="badge bg-danger">差异</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ item.investor_count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted text-center mb-0">暂无基金产品数据，请先导入产品配置。</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
